@@ -1,0 +1,31 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+						
+include ..\common.mk.win64
+
+EXT	=	mexw64
+
+TARGET	=	pyCudaFD
+
+OBJS	=	mexfunction.obj
+	
+SUBINCDIR	=	/I"../cudaFD" \
+
+SUBLIBDIR	=	/LIBPATH:".." \
+			cudaFD.lib
+					
+build: ..\$(TARGET).$(EXT)
+
+..\$(TARGET).$(EXT): $(TARGET).$(EXT)
+	COPY $(TARGET).$(EXT) ..
+	COPY $(TARGET).lib ..
+	
+clean:
+	DEL /Q $(CLEAN_TARGET)
+	IF EXIST x64 RMDIR /S /Q x64
+	IF EXIST Win32 RMDIR /S /Q Win32
+
+$(TARGET).$(EXT): $(OBJS)	
+	REM lib.exe /OUT:"$(TARGET).lib" /NOLOGO /LTCG $(OBJS)
+	link.exe /DLL $(LFLAGS) /MANIFEST /ManifestFile:"$(TARGET).dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:"$(TARGET).pdb" $(LIBDIR) $(SUBLIBDIR) /DEF:"$(TARGET).def" /IMPLIB:"$(TARGET).lib" /OUT:"$@" $(OBJS)
+	

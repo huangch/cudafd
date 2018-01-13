@@ -1,0 +1,51 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+JAVA_PATH		=	/usr/lib/jvm/default-java
+CUDA_PATH    		=	/usr/local/cuda
+CULA_PATH    		=	/usr/local/cula
+MATLAB_PATH		=	/opt/matlab
+
+INCDIR			=	-I. \
+				-I../cudaCommon \
+				-I$(CUDA_PATH)/include \
+				-I$(CULA_PATH)/include \
+				-I$(MATLAB_PATH)/extern/include \
+				-I$(JAVA_PATH)/include \
+				-I$(JAVA_PATH)/include/linux \
+                        	-I/usr/include/python2.7
+
+LIBDIR			=	-L.. \
+				-L$(CUDA_PATH)/lib64 \
+                        	-L/usr/lib/x86_64-linux-gnu \
+				-L"$(MATLAB_PATH)/bin/glnxa64" \
+				-lcuda -lcudart -lnppc -lnppi -lnpps -lcufft -lcublas -lcusolver -lcusparse -lpython2.7
+				# 
+				# -lcuda -lcudart -lnpp -lcufft -lcublas -lcusparse -lcula_core -lcula_lapack
+				# -lc -lm
+
+STATICLIB		=	../libcudaCommon.a 
+
+CFLAGS			=	-g -fpermissive -fPIC -W -Wall -Wswitch -Wformat -Wchar-subscripts -Wparentheses -Wmultichar -Wtrigraphs -Wpointer-arith -Wcast-align -Wreturn-type -Wno-unused-function -Wformat-security -m64 -fno-strict-aliasing -DUNIX -O0
+
+NVCCFLAGS		=	-gencode=arch=compute_52,code=\"sm_52,compute_52\" -m64 --compiler-options -fno-strict-aliasing -DUNIX -O0 --compiler-options "$(CFLAGS)"
+
+LFLAGS			=	-fPIC -shared
+
+CLEAN_TARGET		=	*.dll *.so *.dylib *.mexw64 *.mexa64 *.mexmaci64 *.o *.obj *.cu_o *.cu_obj *.a *.lib *.exp *.idb *.manifest *.pgd *.pdb *.ilk *.suo *.sdf *.ncb *.user 
+
+.SUFFIXES: .c .cc .cpp .cu .cuh .o .cu_o .obj .cu_obj
+	
+.c.o:
+	gcc -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $< 
+
+.cc.o:
+	g++ -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $< 
+
+.cpp.o:
+	echo $(AA)
+	g++ -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $< 
+	
+.cu.cu_o:
+	nvcc -c $(NVCCFLAGS) $(INCDIR) $(SUBINCDIR) $< 
+	mv $*.o $*.cu_o 

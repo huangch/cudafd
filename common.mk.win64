@@ -1,0 +1,44 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+JAVA_PATH		=	C:/java/jdk-1.7-x64
+CUDA_PATH    	=	C:/cuda-6.5
+CULA_PATH    	=	C:/cula-r18
+MATLAB_PATH		=	C:/matlab
+
+INCDIR			=	/I"." \
+				/I"../cudaCommon" \
+				/I"$(CUDA_PATH)/include" \
+				/I"$(CULA_PATH)/include" \
+				/I"$(JAVA_PATH)/include" \
+				/I"$(JAVA_PATH)/include/Win32" \
+				/I"$(MATLAB_PATH)/extern/include"
+
+LIBDIR			=	/LIBPATH:".." \
+				/LIBPATH:"$(CUDA_PATH)/lib/x64" \
+				/LIBPATH:"$(CULA_PATH)/lib64" \
+				/LIBPATH:"$(MATLAB_PATH)/extern/lib/win64/microsoft" \
+				"cudaCommon.lib" "cuda.lib" "cudart.lib" "nppc.lib" "nppi.lib" "npps.lib" "cufft.lib" "cublas.lib" "cusparse.lib" "cula_lapack.lib" "libmx.lib" "libmex.lib" "libmat.lib" "cudart.lib" "kernel32.lib" "user32.lib" "gdi32.lib" "winspool.lib" "comdlg32.lib" "advapi32.lib" "shell32.lib" "ole32.lib" "oleaut32.lib" "uuid.lib" "odbc32.lib" "odbccp32.lib" 
+													
+CFLAGS			=	/wd4996 /Zi /nologo /W3 /WX- /O2 /Oi /GL /D "_WINDLL" /D "_MBCS" /Gm- /EHsc /MT /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Gd /errorReport:queue 
+					
+NVCCFLAGS		=	-gencode=arch=compute_20,code=\"sm_20,compute_20\" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env --cl-version 2010 -ccbin "C:\vs11\VC\bin\amd64" -maxrregcount=0 --machine 64 --compile -Xcompiler "/EHsc /nologo /Od /Zi /MT" 
+				# --keep-dir "x64\Release"
+
+LFLAGS			=	/ERRORREPORT:PROMPT /NOLOGO /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT  /MACHINE:X64
+
+CLEAN_TARGET		=	*.dll *.so *.dylib *.mexw64 *.mexa64 *.mexmaci64 *.o *.obj *.cu_o *.cu_obj *.a *.lib *.exp *.idb *.manifest *.pgd *.pdb *.ilk *.suo *.sdf *.ncb *.user
+
+.SUFFIXES: .c .cc .cpp .cu .cuh .o .cu_o .obj .cu_obj
+
+.c.obj:
+	cl.exe $(CFLAGS) $(INCDIR) $(SUBINCDIR) -Fo$@ -c $<
+	
+.cc.obj:
+	cl.exe $(CFLAGS) $(INCDIR) $(SUBINCDIR) -Fo$@ -c $<
+
+.cpp.obj:
+	cl.exe $(CFLAGS) $(INCDIR) $(SUBINCDIR) -Fo$@ -c $<
+	
+.cu.cu_obj:
+	nvcc.exe $(NVCCFLAGS) -Xcompiler "$(INCDIR) $(SUBINCDIR)" -o $@ $<

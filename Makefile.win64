@@ -1,0 +1,15 @@
+all:
+	cd cudaCommon && nmake -f Makefile.win64 && cd ..
+	cd cudaXCA && nmake -f Makefile.win64 && cd ..
+	cd cudaMXCA && nmake -f Makefile.win64 && cd ..
+	cd cudaXCABoost && nmake -f Makefile.win64 && cd ..
+	cd matCudaXCA && nmake -f Makefile.win64 && cd ..
+	cd matCudaXCABoost && nmake -f Makefile.win64 && cd ..
+
+clean:
+	del /Q *.a *.lib *.so *.dylib *.dll *.bsc *.ilk *.exp *.pdb *.mexa64 *.mexw64 *.mexmaci64
+	cd cudaCommon && nmake -f Makefile.win64 clean && cd ..
+	cd cudaXCA && nmake -f Makefile.win64 clean && cd ..
+	cd cudaMXCA && nmake -f Makefile.win64 clean && cd ..
+	cd cudaXCABoost && nmake -f Makefile.win64 clean && cd ..
+	cd matCudaXCABoost && nmake -f Makefile.win64 clean && cd ..

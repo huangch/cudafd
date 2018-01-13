@@ -1,0 +1,17 @@
+all:
+	cd cudaCommon; make -f Makefile.linux; cd ..
+	cd cudaXCA2; make -f Makefile.linux; cd ..
+	cd cudaSampling; make -f Makefile.linux; cd ..
+	cd cudaFD; make -f Makefile.linux; cd ..
+	cd pyCudaXCA2; make -f Makefile.linux; cd ..
+	cd pyCudaSampling; make -f Makefile.linux; cd ..
+	cd pyCudaFD; make -f Makefile.linux; cd ..
+
+clean:
+	cd cudaCommon; make -f Makefile.linux clean; cd ..
+	cd cudaXCA2; make -f Makefile.linux clean; cd ..
+	cd cudaSampling; make -f Makefile.linux clean; cd ..
+	cd cudaFD; make -f Makefile.linux clean; cd ..
+	cd pyCudaXCA2; make -f Makefile.linux clean; cd ..
+	cd pyCudaSampling; make -f Makefile.linux clean; cd ..
+	cd pyCudaFD; make -f Makefile.linux clean; cd ..

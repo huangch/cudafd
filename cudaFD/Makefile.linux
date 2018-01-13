@@ -1,0 +1,24 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+include ../common.mk.linux
+
+EXT	=	so
+
+TARGET	=	libcudaFD
+
+OBJS	=	cudaFD.o \
+		kernel.cu_o
+
+build: ../$(TARGET).$(EXT)
+
+../$(TARGET).$(EXT): $(TARGET).$(EXT)
+	cp $(TARGET).$(EXT) ..
+
+clean:
+	rm -rf $(CLEAN_TARGET)
+
+$(TARGET).$(EXT): $(OBJS)
+	g++ $(LFLAGS) -Wl,-soname,$(TARGET).$(EXT) $^ $(STATICLIB) $(SUBLIBDIR) $(LIBDIR) -o $@
+
+

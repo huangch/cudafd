@@ -1,0 +1,36 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+SUBINCDIR	=	-I"../cudaFD" \
+			-I/usr/include/python2.7
+
+SUBLIBDIR	=	-L"../cudaFD" \
+			-L/usr/lib/x86_64-linux-gnu \
+			-lcudaFD \
+			-lpython2.7
+
+include ../common.mk.linux
+
+TARGET		=	pyCudaFD
+
+EXT		=	so
+
+OBJS		=	pyCudaFD.o
+
+SUBINCDIR	=	-I../cudaCommon \
+			-I../cudaFD
+
+SUBLIBDIR	=	-L.. \
+			-lcudaFD
+
+build: ../$(TARGET).$(EXT)
+
+../$(TARGET).$(EXT): $(TARGET).$(EXT)
+	cp $(TARGET).$(EXT) ..
+
+clean:
+	rm -rf $(CLEAN_TARGET) $(TARGET).$(EXT)
+
+$(TARGET).$(EXT): $(OBJS)
+	g++ $(LFLAGS) -Wl,-soname,$(TARGET).$(EXT) $^ $(STATICLIB) $(SUBLIBDIR) $(LIBDIR) -o $@
+

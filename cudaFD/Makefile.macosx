@@ -1,0 +1,26 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+include ../common.mk.macosx
+
+EXT		=	dylib
+
+TARGET		=	libcudaFD
+
+OBJS		=	cudaFD.o \
+			kernel.cu_o
+
+build: ../$(TARGET).$(EXT)
+
+../$(TARGET).$(EXT): $(TARGET).$(EXT)
+	cp $(TARGET).$(EXT) ..
+
+clean:
+	rm -rf $(CLEAN_TARGET) $(TARGET).$(EXT)
+
+$(TARGET).$(EXT): $(OBJS)
+	g++ $(LFLAGS) $(CFLAGS) $^ $(STATICLIB) $(SUBLIBDIR) $(LIBDIR) -o $@
+	# calls libtool with many options -- see man libtool
+	# -compatibility_version is used by dyld, see also cmpdylib
+	# file $(TARGET).$(EXT)		# Mach-O dynamically linked shared library ppc
+	# otool -L $(TARGET).$(EXT)	# versions, refs /usr/lib/libgcc_s.1.dylib

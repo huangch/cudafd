@@ -1,0 +1,17 @@
+all:
+	cd cudaCommon; make -f Makefile.macosx; cd ..
+	cd cudaXCA2; make -f Makefile.macosx; cd ..
+	cd cudaSampling; make -f Makefile.macosx; cd ..
+	cd cudaFD; make -f Makefile.macosx; cd ..
+	cd pyCudaXCA2; make -f Makefile.macosx; cd ..
+	cd pyCudaSampling; make -f Makefile.macosx; cd ..
+	cd pyCudaFD; make -f Makefile.macosx; cd ..
+
+clean:
+	cd cudaCommon; make -f Makefile.macosx clean; cd ..
+	cd cudaXCA2; make -f Makefile.macosx clean; cd ..
+	cd cudaSampling; make -f Makefile.macosx clean; cd ..
+	cd cudaFD; make -f Makefile.macosx clean; cd ..
+	cd pyCudaXCA2; make -f Makefile.macosx clean; cd ..
+	cd pyCudaSampling; make -f Makefile.macosx clean; cd ..
+	cd pyCudaFD; make -f Makefile.macosx clean; cd ..

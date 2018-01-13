@@ -1,0 +1,46 @@
+# Define installation location for CUDA and compilation flags compatible
+# with the CUDA include files.
+
+JAVA_PATH=/System/Library/Frameworks/JavaVM.framework
+CUDA_PATH=/usr/local/cuda
+MATLAB_PATH=/opt/matlab2013a
+
+INCDIR		=	-I. \
+			-I../cudaCommon \
+			-I$(CUDA_PATH)/include \
+			-I$(JAVA_PATH)/Headers \
+			-I$(MATLAB_PATH)/extern/include \
+			-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 \
+			-I/usr/local/lib/python2.7/site-packages/numpy/core/include
+
+LIBDIR		=	-L$(CUDA_PATH)/lib -lcuda -lcudart -lnppc -lnppi -lnpps -lcufft -lcublas -lcusolver -lcusparse
+
+STATICLIB		=	../libcudaCommon.a 
+
+CFLAGS      	=	-g -W -Wall -Wimplicit -Wswitch -Wformat -Wchar-subscripts -Wparentheses -Wmultichar -Wtrigraphs -Wpointer-arith -Wcast-align -Wreturn-type -Wno-unused-function -fno-strict-aliasing -DUNIX -O2 -DCPU_EIGEN
+
+# LFLAGS      	=	-dynamiclib -arch x86_64 -Xarch_x86_64  -flat_namespace -F/Library/Frameworks -framework CUDA
+LFLAGS      	=	-dynamiclib -flat_namespace -F/Library/Frameworks -framework CUDA
+LFLAGS_EXE      	=	-G -flat_namespace 
+
+# -dynamiclib -shared -fPIC
+# -arch x86_64 -current_version 0.0.1 -Xlinker -rpath /usr/local/cuda/lib
+
+NVCCFLAGS	=	 -g -gencode=arch=compute_20,code=\"sm_20,compute_20\" -gencode=arch=compute_30,code=\"sm_30,compute_30\" -m64 --compiler-options -fno-strict-aliasing -DUNIX -O2
+
+CLEAN_TARGET	=	*.dll *.so *.dylib *.mexw64 *.mexa64 *.mexmaci64 *.o *.obj *.cu_o *.cu_obj *.a *.lib *.exp *.idb *.manifest *.pgd *.pdb *.ilk *.suo *.sdf *.ncb *.user
+
+.SUFFIXES: .c .cc .cpp .cu .cuh .o .cu_o .obj .cu_obj
+	
+.c.o:
+	gcc -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $<
+
+.cc.o:
+	g++ -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $<
+
+.cpp.o:
+	g++ -c $(CFLAGS) $(INCDIR) $(SUBINCDIR) $<
+	
+.cu.cu_o:
+	nvcc -c $(NVCCFLAGS) $(INCDIR) $(SUBINCDIR) $<
+	mv $*.o $*.cu_o 
